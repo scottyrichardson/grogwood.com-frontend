@@ -1,18 +1,19 @@
-# Tooling Setup
+# Tooling setup
 
-Project requires Node with Gulp to build. Install Node. Then use NPM to install Gulp:
+Project requires Node and Gulp to build. Install Node. Then use NPM to install Gulp:
+
 `npm install -g gulp`
 
-# Env Setup
-
-## Dev
+# Environment setup
 
 Install project dependencies with `npm install`
 
-Build project with `gulp` or `gulp dev`
+# Building the project
 
-## Prod
+## Dev environment
 
-Install project dependencies with `npm install --omit=dev`
+Build the project with `gulp` or `gulp dev`
 
-Build project with `gulp prod`
+## Prod environment
+
+Build the project with `gulp prod`
