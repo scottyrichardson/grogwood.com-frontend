@@ -74,6 +74,7 @@ jobs:
     name: Deploy [ AWS ]
     runs-on: ubuntu-latest
     needs: [build, validate]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -97,6 +98,7 @@ jobs:
     name: Invalidate Cache [ CloudFront ]
     runs-on: ubuntu-latest
     needs: [build, validate, deploy]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
