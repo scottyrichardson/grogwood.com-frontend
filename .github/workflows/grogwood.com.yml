@@ -7,12 +7,15 @@ on:
     branches: [main]
 
 env:
+  # AWS
   AWS_S3_BUCKET_NAME: ${{ vars.AWS_S3_BUCKET_NAME }}
   AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
   AWS_REGION: ${{ vars.AWS_REGION }}
+  # Build settings
   NODE_VERSION: 20.x
-  BUILD_PATH: dist
   GULP_BUILD_TASK: prod
+  GULP_BUILD_PATH: dist
+  # FILE PATHS
   CSS_FILE_PATH: dist/assets/css/styles.min.css
   INDEX_FILE_PATH: dist/index.html
 
@@ -33,8 +36,8 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.BUILD_PATH }}
-          path: ${{ env.BUILD_PATH }}
+          name: ${{ env.GULP_BUILD_PATH }}
+          path: ${{ env.GULP_BUILD_PATH }}
           retention-days: 7
 
   validate:
@@ -48,8 +51,8 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.BUILD_PATH }}
-          path: ${{ env.BUILD_PATH }}
+          name: ${{ env.GULP_BUILD_PATH }}
+          path: ${{ env.GULP_BUILD_PATH }}
 
       - name: Validate CSS file
         uses: ./.github/actions/validate-file
@@ -65,7 +68,7 @@ jobs:
         uses: ./.github/actions/validate-html
         with:
           node-version: ${{ env.NODE_VERSION }}
-          source-path: ${{ env.BUILD_PATH }}
+          source-path: ${{ env.GULP_BUILD_PATH }}
 
   deploy:
     name: Deploy [ AWS ]
@@ -78,8 +81,8 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.BUILD_PATH }}
-          path: ${{ env.BUILD_PATH }}
+          name: ${{ env.GULP_BUILD_PATH }}
+          path: ${{ env.GULP_BUILD_PATH }}
 
       - name: Deploy artifact to AWS S3 bucket
         uses: ./.github/actions/aws-s3-upload
@@ -88,7 +91,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           s3-bucket-name: ${{ env.AWS_S3_BUCKET_NAME }}
-          source-path: ${{ env.BUILD_PATH }}
+          source-path: ${{ env.GULP_BUILD_PATH }}
 
   invalidate-cache:
     name: Invalidate Cache [ CloudFront ]
