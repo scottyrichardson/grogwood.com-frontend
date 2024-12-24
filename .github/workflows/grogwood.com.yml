@@ -94,8 +94,8 @@ jobs:
       - name: Deploy artifact to AWS S3 bucket
         uses: scottyrichardson/github-actions/.github/actions/aws-s3-upload@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_GROGWOOD_DEPLOYER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_GROGWOOD_DEPLOYER_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           s3-bucket-name: ${{ env.AWS_S3_BUCKET_NAME }}
           source-path: ${{ env.GULP_BUILD_PATH }}
@@ -112,8 +112,8 @@ jobs:
       - name: Invalidate CloudFront cache
         uses: scottyrichardson/github-actions/.github/actions/aws-cloudfront-invalidation@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_GROGWOOD_DEPLOYER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_GROGWOOD_DEPLOYER_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           cloudfront-distribution-id: ${{ env.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
           cloudfront-invalidation-path: /*
