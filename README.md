@@ -1,45 +1,74 @@
-# Tooling setup
+# Grogwood.com Frontend
 
-Project requires Node and Gulp to build.
+This project uses NodeJS and gulp to build a deployable artifact located in `dist`. The artifact gets deployed to an AWS S3 bucket that sits behind a CloudFront distribution.
 
-Install Node. Then use NPM to install Gulp:
+**Build and deployment is handled automatically by CI/CD actions in this repo**. The process to manually deploy is detailed below.
 
-      npm install -g gulp
+## Prerequisites
 
-# Environment setup
+- Node.js
+- AWS CLI (for deployment)
 
-Install project dependencies with:
+## NodeJS
 
-      npm install
+Install required packages:
 
-# Building the project
+```bash
+# Install Gulp
+npm install -g gulp npm-check-updates
 
-## Dev environment
+# Install project dependencies:
+npm install
+```
 
-Build the project with:
+### Building the Project
 
-      gulp
+```bash
+gulp
+# or
+gulp prod
+```
 
-or:
+### Updating Dependencies
 
-      gulp dev
+Check and update dependencies:
 
-## Prod environment
+```bash
+# Update package.json versions
+ncu -u
 
-Build the project with
+# Install updated packages
+npm install
+```
 
-      gulp prod
+## AWS
 
-# Updating project packages
+### CLI
 
-Install npm-check-updates globally with:
+1. Create access key in AWS Portal:
 
-      npm install -g npm-check-updates
+   - Login to AWS Portal
+   - Navigate to profile → Security Credentials
+   - Create new access key under "Access Keys" section
 
-Then check for latest project dependencies and set versions to package.json with:
+2. Configure AWS CLI with access key:
 
-      ncu -u
+```bash
+aws configure
+```
 
-Finally, update the lockfile and install the new versions with:
+### S3 Bucket
 
-      npm install
+Upload `dist` to an S3 bucket:
+
+```bash
+aws s3 sync dist/ s3://<s3-bucket-name>
+```
+
+### CloudFront
+
+Invalidate CloudFront cache:
+
+```bash
+aws cloudfront create-invalidation --distribution-id <distribution-id> --paths "/*"
+```
